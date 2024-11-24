@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, rgba(126, 111, 71, 0.8), rgba(#fff));
+      color: #346954;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    /* Glassmorphism Donation Form */
+    .donation-form {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(240, 109, 2, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 400px;
+      padding: 30px;
+      color: #ad7805;
+    }
+
+    .donation-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #050505;
+    }
+
+    .donation-form label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
+      color: #050505;
+    }
+
+    .donation-form input,
+    .donation-form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #050505;
+      font-size: 14px;
+    }
+
+    .donation-form input:focus {
+      outline: none;
+      border-color: #00bcd4;
+    }
+
+    /* Amount Buttons */
+    .amount-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .amount-buttons button {
+      flex: 1;
+      margin-right: 5px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      color: #965206;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .amount-buttons button:hover,
+    .amount-buttons button.active {
+      background: #00bcd4;
+    }
+
+    .amount-buttons button:last-child {
+      margin-right: 0;
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+      margin-bottom: 15px;
+    }
+
+    .payment-methods label {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .donation-total {
+      text-align: center;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    /* Submit Button */
+    .donation-form button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background: #00bcd4;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .donation-form button[type="submit"]:hover {
+      background: #008ba3;
+    }
+  </style>
+</head>
+<body>
+  <form class="donation-form" id="donationForm">
+    <h2>Support Our Cause</h2>
+
+    <!-- Amount Section -->
+    <label for="amount">Choose Amount:</label>
+    <div class="amount-buttons">
+      <button type="button" class="amount-btn" data-value="50">GH₵ 50</button>
+      <button type="button" class="amount-btn" data-value="100">GH₵ 100</button>
+      <button type="button" class="amount-btn" data-value="200">GH₵ 200</button>
+      <button type="button" class="amount-btn" data-value="500">GH₵ 500</button>
+      <button type="button" class="amount-btn custom-amount">Other</button>
+    </div>
+    <input type="number" id="custom-amount" placeholder="Enter your amount" style="display:none;" />
+
+    <!-- Payment Method Section -->
+    <label>Payment Method:</label>
+    <select id="payment-method">
+      <option value="mtn">MTN Mobile Money</option>
+      <option value="airteltigo">AirtelTigo Cash</option>
+      <option value="telecel">Telecel Cash</option>
+      <option value="bank">Bank Transfer</option>
+      <option value="mastercard">MasterCard</option>
+      <option value="paypal">PayPal</option>
+    </select>
+
+    <!-- Personal Info -->
+    <label for="first-name">First Name:</label>
+    <input type="text" id="first-name" placeholder="Enter your first name" />
+
+    <label for="last-name">Last Name:</label>
+    <input type="text" id="last-name" placeholder="Enter your last name" />
+
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" placeholder="Enter your email address" />
+
+    <!-- Donation Total -->
+    <div class="donation-total">
+      Donation Total: <span id="donation-total">0 GHS</span>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Donate Now</button>
+  </form>
+<script>
+  // DOM Elements
+  const paymentMethodSelect = document.getElementById('paymentMethod');
+  const additionalFieldsContainer = document.getElementById('additionalFields');
+  
+  // Update fields based on payment method
+  paymentMethodSelect.addEventListener('change', function () {
+    const selectedMethod = this.value;
+  
+    // Clear previous fields
+    additionalFieldsContainer.innerHTML = '';
+  
+    if (selectedMethod === 'MTN Mobile Money' || selectedMethod === 'Telecel Cash' || selectedMethod === 'AirtelTigo Money') {
+      additionalFieldsContainer.innerHTML = `
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number:</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            class="form-control"
+            placeholder="Enter your phone number"
+            required
+          />
+          <small class="error-message" id="phoneError">Please enter a valid phone number.</small>
+        </div>
+      `;
+    } else if (selectedMethod === 'Bank') {
+      additionalFieldsContainer.innerHTML = `
+        <div class="form-group">
+          <label for="bankName">Bank Name:</label>
+          <input
+            type="text"
+            id="bankName"
+            class="form-control"
+            placeholder="Enter your bank name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="accountNumber">Account Number:</label>
+          <input
+            type="text"
+            id="accountNumber"
+            class="form-control"
+            placeholder="Enter your account number"
+            required
+          />
+        </div>
+      `;
+    } else if (selectedMethod === 'MasterCard') {
+      additionalFieldsContainer.innerHTML = `
+        <div class="form-group">
+          <label for="cardNumber">Card Number:</label>
+          <input
+            type="text"
+            id="cardNumber"
+            class="form-control"
+            placeholder="Enter your card number"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="expiryDate">Expiry Date:</label>
+          <input
+            type="month"
+            id="expiryDate"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="cvv">CVV:</label>
+          <input
+            type="text"
+            id="cvv"
+            class="form-control"
+            placeholder="Enter CVV"
+            required
+          />
+        </div>
+      `;
+    } else if (selectedMethod === 'PayPal') {
+      additionalFieldsContainer.innerHTML = `
+        <div class="form-group">
+          <label for="paypalEmail">PayPal Email:</label>
+          <input
+            type="email"
+            id="paypalEmail"
+            class="form-control"
+            placeholder="Enter your PayPal email"
+            required
+          />
+          <small class="error-message" id="paypalError">Please enter a valid email address.</small>
+        </div>
+      `;
+    }
+  });
+  
+  // Submit form
+  document.getElementById('donationForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+  
+    const paymentMethod = paymentMethodSelect.value;
+    const additionalInputs = additionalFieldsContainer.querySelectorAll('input');
+  
+    // Basic validation for additional fields
+    let valid = true;
+    additionalInputs.forEach((input) => {
+      if (!input.value.trim()) {
+        input.nextElementSibling.style.display = 'block';
+        valid = false;
+      } else {
+        input.nextElementSibling.style.display = 'none';
+      }
+    });
+  
+    if (!valid) return;
+  
+    // Simulate processing
+    const loader = document.getElementById('formLoader');
+    loader.style.display = 'block';
+    setTimeout(() => {
+      loader.style.display = 'none';
+      alert('Thank you! Your donation has been successfully processed.');
+      document.getElementById('donationForm').reset();
+      additionalFieldsContainer.innerHTML = ''; // Clear dynamic fields
+    }, 2000);
+  });
+</script>  
+</body>
+</html>
